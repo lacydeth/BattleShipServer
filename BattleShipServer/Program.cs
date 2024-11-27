@@ -122,16 +122,22 @@ class BattleshipServer
                 }
             }
         }
+        catch (SocketException ex)
+        {
+            Console.WriteLine($"Socket exception: {ex.Message}");
+            gameStarted = false;
+            await currentPlayer.SendMessage("ERROR");
+            await opponent.SendMessage("OPPONENT_DISCONNECTED");
+        }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error in ProcessPlayerMoves: {ex.Message}");
+            Console.WriteLine($"Unexpected error: {ex.Message}");
             gameStarted = false;
-
-            // Notify players about the error
             await currentPlayer.SendMessage("ERROR");
             await opponent.SendMessage("OPPONENT_DISCONNECTED");
         }
     }
+
 }
 
 public class Player
